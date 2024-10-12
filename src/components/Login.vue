@@ -1,79 +1,57 @@
 <template>
-    <div id="app" class="flex items-center justify-center min-h-screen">
+    <div id="app" class="flex items-center justify-center min-h-screen bg-black">
         <div class="bg-white p-8 rounded-lg shadow-lg w-96">
             <h1 class="text-2xl font-bold text-center text-black mb-6">Log in to Minimify</h1>
             <div class="my-6 border-t border-gray-300"></div>
             <div class="space-y-4">
-                <div>
-                    <label class="block text-sm text-gray-600 mb-1" for="email">Email or username</label>
-                    <input id="email" type="text" v-model="form.email"
-                        class="w-full px-3 py-2 bg-gray-100 text-black rounded border border-gray-300 focus:outline-none focus:border-black"
-                        placeholder="Email or username" :class="{ 'border-red-500': errors.email }" />
-                    <p v-if="errors.email" class="text-red-500 text-xs mt-1">{{ errors.email }}</p>
-                </div>
-                <div>
-                    <label class="block text-sm text-gray-600 mb-1" for="password">Password</label>
-                    <div class="relative">
-                        <input id="password" :type="showPassword ? 'text' : 'password'" v-model="form.password"
-                            class="w-full px-3 py-2 bg-gray-100 text-black rounded border border-gray-300 focus:outline-none focus:border-black"
-                            placeholder="Password" :class="{ 'border-red-500': errors.password }" />
-                        <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"
-                            class="absolute right-3 top-3 text-gray-600 cursor-pointer"
-                            @click="togglePasswordVisibility"></i>
-                    </div>
-                    <p v-if="errors.password" class="text-red-500 text-xs mt-1">{{ errors.password }}</p>
-                </div>
-                <button @click="submitForm" class="w-full bg-black text-white py-2 rounded-full font-bold">Log
-                    In</button>
-            </div>
-            <div class="text-center mt-4">
-                <a href="#" class="text-sm text-gray-600 hover:underline">Forgot your password?</a>
-            </div>
-            <div class="text-center mt-4">
-                <span class="text-sm text-gray-600">Don't have an account?
-                    <a href="#" class="text-black hover:underline">Sign up for Minimify</a>
-                </span>
+                <button @click="loginWithSpotify" class="w-full bg-black text-white py-2 rounded-full font-bold">
+                    Log In with Spotify
+                </button>
             </div>
         </div>
     </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
     data() {
         return {
-            form: {
-                email: '',
-                password: '',
-            },
-            showPassword: false,
-            errors: {},
+            showPassword: false as boolean,
         };
     },
     methods: {
-        togglePasswordVisibility() {
-            this.showPassword = !this.showPassword;
-        },
-        submitForm() {
-            this.errors = {};
-            if (!this.form.email) {
-                this.errors.email = 'Email or username is required';
+        loginWithSpotify() {
+            const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
+            const redirectUri = 'http://localhost:8080/callback';
+
+            if (!clientId) {
+                console.error('Spotify Client ID is not defined in the environment variables.');
+                return;
             }
-            if (!this.form.password) {
-                this.errors.password = 'Password is required';
-            }
-            if (!this.errors.email && !this.errors.password) {
-                alert('Form submitted!');
-                // Here you can handle the form submission, such as making API calls.
-            }
-        },
-    },
-};
+
+            const scopes = [
+                'user-read-private',
+                'user-read-email',
+                'user-library-read',
+                'playlist-read-private',
+                'streaming',
+            ].join(' ');
+
+            const url = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${encodeURIComponent(
+                redirectUri
+            )}&scope=${encodeURIComponent(scopes)}`;
+
+            window.location.href = url;
+        }
+    }
+});
 </script>
 
 <style scoped>
 body {
-    background: #ffffff;
+    background: #1db954;
     font-family: 'Poppins', sans-serif;
 }
 </style>
