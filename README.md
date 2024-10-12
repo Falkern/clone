@@ -9,6 +9,9 @@ Minimify is an early-stage Spotify clone, designed to push my development skills
 - Feature a sleek, minimalistic design.
 - Develop an Electron-based version for Windows.
 
+## Milestones 🌸
+- Redirect Page ✅
+
 ## Tools & Frameworks Used 👴🏻
 
 - [Vue](https://github.com/vuejs) - for building user interfaces.
