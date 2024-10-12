@@ -1,5 +1,17 @@
-# Vue 3 + TypeScript + Vite
+# Minimify 🦇
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Minimify is an early-stage Spotify clone, designed to push my development skills to new heights. This project is a personal challenge inspired by boredom, and I aim to create more advanced applications than I’ve previously tackled. Best of all, Minimify will be fully open-source, so feel free to fork it and contribute!
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+## Goals 📈
+
+- Allow users to log in using their Spotify accounts.
+- Provide an ad-free listening experience.
+- Feature a sleek, minimalistic design.
+- Develop an Electron-based version for Windows.
+
+## Tools & Frameworks Used 👴🏻
+
+- [Vue](https://github.com/vuejs) - for building user interfaces.
+- [TailwindCSS](https://github.com/tailwindlabs/tailwindcss) - for styling and layout.
+- [TypeScript](https://github.com/microsoft/TypeScript) - for robust type safety.
+- [Axios](https://github.com/axios/axios) - for making HTTP requests.
