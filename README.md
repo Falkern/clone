@@ -7,6 +7,7 @@ A spotify clone that is still under early development.
 - let users login with there spotify account
 - ad free
 - minimalistic design
+- make electron based version for windows
 
 # Tools & Frameworks Used 👴🏻
 
