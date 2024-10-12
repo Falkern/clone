@@ -18,3 +18,8 @@ Thumbs.db
 # Ignore IDE-specific files
 .vscode/
 .idea/
+
+# Ignore additional environment variable files
+.env.*
+
+C:\Users\Silun\Documents\GitHub\clone\.env
