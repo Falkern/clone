@@ -1,24 +1,30 @@
 <template>
     <div class="home-container">
-        <h1 class="text-3xl font-bold text-center mt-10">Welcome to Minimify - YouTube!</h1>
+        <h1 class="text-3xl font-bold text-center mt-10">Welcome to Minimify - YouTube Music!</h1>
         <div v-if="loading" class="text-center">Loading your YouTube data...</div>
         <div v-if="error" class="text-red-500 text-center">{{ error }}</div>
 
         <div v-if="videos.length">
-            <input type="text" v-model="searchQuery" @input="searchVideos" class="search-input"
-                placeholder="Search for videos..." />
+            <input type="text" v-model="searchQuery" @input="debouncedSearch" class="search-input"
+                placeholder="Search for music videos..." :disabled="loading" />
             <ul class="video-list">
-                <li v-for="video in videos" :key="video.id.videoId" class="video-item">
+                <li v-for="video in videos" :key="video.id.videoId" class="video-item"
+                    @click="playVideo(video.id.videoId)">
                     <h2>{{ video.snippet.title }}</h2>
-                    <img :src="video.snippet.thumbnails.default.url" alt="Video thumbnail" />
+                    <img :src="video.snippet.thumbnails.high.url" alt="Video thumbnail" />
                 </li>
             </ul>
+        </div>
+
+        <div v-if="selectedVideoId" class="video-player">
+            <iframe width="100%" height="315" :src="'https://www.youtube.com/embed/' + selectedVideoId + '?autoplay=1'"
+                frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 import axios from 'axios';
 
 interface Video {
@@ -28,7 +34,7 @@ interface Video {
     snippet: {
         title: string;
         thumbnails: {
-            default: {
+            high: {
                 url: string;
             };
         };
@@ -42,18 +48,21 @@ export default defineComponent({
         const error = ref('');
         const searchQuery = ref('');
         const videos = ref<Video[]>([]);
+        const selectedVideoId = ref<string | null>(null);
+        const debounceTimeout = ref<ReturnType<typeof setTimeout> | null>(null);
 
         const searchVideos = async () => {
             if (searchQuery.value.trim() === '') {
                 videos.value = [];
                 return;
             }
-            const apiKey = 'YOUR_YOUTUBE_API_KEY'; // Replace with your YouTube API Key
+            const apiKey = process.env.VITE_YOUTUBE_API_KEY; // Access the API key from environment variables
             try {
                 const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
                     params: {
                         part: 'snippet',
-                        q: searchQuery.value,
+                        q: searchQuery.value + ' music',
+                        type: 'video',
                         key: apiKey,
                     },
                 });
@@ -65,12 +74,29 @@ export default defineComponent({
             }
         };
 
+        const playVideo = (videoId: string) => {
+            selectedVideoId.value = videoId;
+        };
+
+        const debouncedSearch = () => {
+            if (debounceTimeout.value) clearTimeout(debounceTimeout.value);
+            debounceTimeout.value = setTimeout(searchVideos, 300);
+        };
+
+        watch(searchQuery, (newQuery) => {
+            if (!newQuery) {
+                videos.value = [];
+            }
+        });
+
         return {
             loading,
             error,
             searchQuery,
             videos,
-            searchVideos,
+            selectedVideoId,
+            playVideo,
+            debouncedSearch,
         };
     },
 });
@@ -113,5 +139,17 @@ export default defineComponent({
     background: #1c1c1c;
     border-radius: 5px;
     cursor: pointer;
+    transition: background 0.3s;
+}
+
+.video-item:hover {
+    background: #333;
+}
+
+.video-player {
+    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 </style>
