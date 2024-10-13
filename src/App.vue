@@ -1,16 +1,23 @@
 <template>
-  <div id="app">
-    <Login />
-  </div>
+  <router-view />
 </template>
 
-<script>
-import Login from './components/Login.vue';
+<script lang="ts">
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
   name: 'App',
-  components: {
-    Login
-  }
-};
+});
 </script>
+
+<style>
+/* Global styles can be added here */
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #121212;
+  /* Set a default background */
+  color: #ffffff;
+  /* Default text color */
+}
+</style>
